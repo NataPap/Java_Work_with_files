@@ -21,11 +21,11 @@ public interface ApplicationMapper {
     AuthorDto AuthorByAuthorDto(Author author);
     List<AuthorDto> ListAuthorByListAuthorDto(List<Author> authors);
     Author AuthorByAddAuthorDto(AuthorAddDto dto);
-
+@Mapping(source = "name", target = "name")
     BookDto BookByBookDto (Book book);
     List<BookDto> ListBookByListBookDto (List<Book> books);
-    Book BookByAddBookDto(BookAddDto dto);
-
+    //Book BookByAddBookDto(BookAddDto dto);
+    @Mapping(source = "name", target = "name")
     ImageDto ImageByImageDto (Image image);
     List<ImageDto> ListImageByListImageDto(List<Image> images);
     Image ImageByAddImageDto (ImageAddDto dto);

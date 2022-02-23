@@ -106,16 +106,18 @@ public class HomeController {
     }
 
     //додати нову книжку в базу з колекцією фото.
+
     @PostMapping( "/addBook")
-    public ResponseEntity createBook( BookAddDto model) throws IOException {
-        Book book = applicationMapper.BookByAddBookDto(model);
-        book.setName(model.getName());
-        Author author =  authorRepository.getById(model.getAuthorId());
+    public ResponseEntity create(@RequestBody BookAddDto add) throws IOException {
+
+        Book book =new Book();
+        book.setName(add.getName());
+        Author author =  authorRepository.getById(add.getAuthorId());
         book.setAuthor(author);
         bookRepository.save(book);
 
-        for (String name:model.getImages()) {
-            List<Image> images =imageRepository.findByName(name);
+        for (String name:add.getImages()) {
+            List<Image> images = imageRepository.findByName(name);
             Image image = images.get(0);
             image.setBook(book);
             imageRepository.save(image);
@@ -125,12 +127,15 @@ public class HomeController {
     }
 
 
+
     //додавання image
     @PostMapping("/books/addImage")
     public String createImage(ImageAddDto model) {
         Image image = applicationMapper.ImageByAddImageDto(model);
         String fileName=storageService.store(model.getBase64());
         image.setName(fileName);
+        Book book =  bookRepository.getById(model.getBookId());
+        image.setBook(book);
         imageRepository.save(image);
         return fileName;
     }
