@@ -24,7 +24,6 @@ import program.storage.StorageService;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.List;
 
 
@@ -126,17 +125,21 @@ public class HomeController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-
-
     //додавання image
     @PostMapping("/books/addImage")
-    public String createImage(ImageAddDto model) {
-        Image image = applicationMapper.ImageByAddImageDto(model);
+    public String createImage(@RequestBody ImageAddDto model) {
         String fileName=storageService.store(model.getBase64());
-        image.setName(fileName);
-        Book book =  bookRepository.getById(model.getBookId());
-        image.setBook(book);
-        imageRepository.save(image);
+        try {
+            Image image = applicationMapper.ImageByAddImageDto(model);
+            image.setName(fileName);
+            Book book = bookRepository.getById(model.getBookId());
+            image.setBook(book);
+            imageRepository.save(image);
+        }catch (Exception ex)
+        {
+            System.out.println("Error "+ ex.getMessage());
+        }
         return fileName;
     }
+
 }

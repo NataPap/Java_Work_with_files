@@ -1,39 +1,53 @@
+import * as React from "react";
 
-import * as React from 'react';
+import "./App.css";
+import { Col, Row, Button } from "antd";
+import CropperModal from "./common/CropperModal";
+import http, { urlBackend } from "./http_common";
 
-import './App.css';
-import { Col, Row } from 'antd';
-import CropperModal from './common/CropperModal';
-import http, {urlBackend} from "./http_common"
-
-
-function App() { 
-
+function App() {
   const [images, setImages] = React.useState<Array<string>>([]);
- 
+
   const handleSelected = async (base64: string) => {
     //console.log("base64", base64);
-    const imgName = await http.post<string>("upload", {base64});
-    setImages([...images,imgName.data]);
-  }
+    const imgName = await http.post<string>("upload", { base64 });
+    setImages([...images, imgName.data]);
+  };
+
   const dataImages = images.map((item, key) => {
     return (
       <Col md={4} key={key}>
         <div>
-          <img src={urlBackend+"files/"+item} alt="images" width="100%" />
+          <img src={urlBackend + "files/" + item} alt="images" width="100%" />
         </div>
       </Col>
     );
   });
+
+  const handleAddBook= async () => {
+    await http.post("addbook", {
+      authorId: 1, 
+      name: "Букварик не для дітей",
+      images
+    });
+  }
+
   return (
     <>
       <h1>Hello react</h1>
-      <Row gutter={[8, 8]}>
-        {dataImages}
-        <Col md={4}>
-          <CropperModal onSelected={handleSelected} />
-        </Col>
-      </Row>
+      <div>
+        <Row gutter={[8, 8]}>
+          {dataImages}
+          <Col md={4}>
+            <CropperModal onSelected={handleSelected} />
+          </Col>
+        </Row>
+      </div>
+      <div>
+      <Button type="primary" onClick={handleAddBook}>
+        Додати книжку
+      </Button>
+      </div>
     </>
   );
 }
