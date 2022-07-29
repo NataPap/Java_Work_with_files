@@ -7,5 +7,5 @@ import program.entities.Book;
 public class ImageDto {
     private int id;
     private String name;
-    private int bookId;;
+    private int bookId;
 }
